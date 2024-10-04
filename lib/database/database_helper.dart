@@ -21,6 +21,13 @@ class DatabaseHelper {
     return _database!;
   }
 
+  /// Initializes the database by creating a database file at [dbPath] if it
+  /// doesn't exist, and setting up the database schema if it is the first time
+  /// the database is created. If the database already exists, it will open the
+  /// existing database. The database version is [version]. If the database is
+  /// being upgraded from an older version, the [onUpgrade] function will be
+  /// called with the old version and the new version. Returns a [Database]
+  /// object.
   Future<Database> _initDatabase() async {
     String dbPath = path.join(await getDatabasesPath(), dbName);
     return await openDatabase(

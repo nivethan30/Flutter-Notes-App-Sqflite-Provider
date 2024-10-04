@@ -17,6 +17,19 @@ class NoteProvider extends ChangeNotifier {
 
   List<Note> get filteredNote => _filterdNote;
 
+  /// Retrieves all notes from the database.
+  ///
+  /// When the function is called, the [isLoading] flag is set to `true` and a
+  /// notification is sent to any widgets that are listening to this provider.
+  ///
+  /// The notes are retrieved from the database using [DatabaseQuery.getNotes].
+  ///
+  /// If an error occurs during the retrieval process, the error is logged using
+  /// the [Logger] class.
+  ///
+  /// After the retrieval process is complete, the [isLoading] flag is set to
+  /// `false` and a notification is sent to any widgets that are listening to this
+  /// provider.
   Future<void> getAllNotes() async {
     try {
       isLoading = true;
@@ -31,6 +44,14 @@ class NoteProvider extends ChangeNotifier {
     }
   }
 
+  /// Creates a new note in the database.
+  ///
+  /// The note is created using [DatabaseQuery.createNote].
+  ///
+  /// If an error occurs during the creation process, the error is logged using
+  /// the [Logger] class and `false` is returned.
+  ///
+  /// If the note is created successfully, `true` is returned.
   Future<bool> createNote(Note newNote) async {
     try {
       final bool isCreated = await _query.createNote(newNote);
@@ -41,6 +62,14 @@ class NoteProvider extends ChangeNotifier {
     }
   }
 
+  /// Updates a note in the database.
+  ///
+  /// The note is updated using [DatabaseQuery.updateNote].
+  ///
+  /// If an error occurs during the update process, the error is logged using
+  /// the [Logger] class and `false` is returned.
+  ///
+  /// If the note is updated successfully, `true` is returned.
   Future<bool> updateNote(Note updatedNote) async {
     try {
       final bool isUpdated =
@@ -52,6 +81,14 @@ class NoteProvider extends ChangeNotifier {
     }
   }
 
+  /// Deletes a note from the database.
+  ///
+  /// The note is deleted using [DatabaseQuery.deleteNote].
+  ///
+  /// If an error occurs during the deletion process, the error is logged using
+  /// the [Logger] class and `false` is returned.
+  ///
+  /// If the note is deleted successfully, `true` is returned.
   Future<bool> deleteNote(int id) async {
     try {
       final bool isDeleted = await _query.deleteNote(id);
@@ -62,6 +99,16 @@ class NoteProvider extends ChangeNotifier {
     }
   }
 
+  /// Searches the notes for a given search string.
+  ///
+  /// The search is case insensitive and is done on both the title and content of
+  /// the notes.
+  ///
+  /// If the [searchString] is empty, the filtered notes are reset to the original
+  /// list of notes.
+  ///
+  /// After the search is done, a notification is sent to any widgets that are
+  /// listening to this provider.
   void searchNote(String searchString) {
     if (searchString.isNotEmpty) {
       _filterdNote = _allNotes
@@ -75,6 +122,13 @@ class NoteProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Sorts the notes in ascending or descending order based on the last updated date
+  /// and notifies any widgets that are listening to this provider.
+  ///
+  /// The sort order is toggled between ascending and descending each time the
+  /// method is called. The sort order is determined by the [_isAscending] variable.
+  ///
+  /// The notes are sorted in place.
   void sortNotes() {
     if (!isAscending) {
       _filterdNote.sort((a, b) =>

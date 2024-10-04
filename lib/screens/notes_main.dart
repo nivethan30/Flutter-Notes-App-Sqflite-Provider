@@ -1,9 +1,7 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:notes_app/utils/constants.dart';
 import 'package:quickalert/quickalert.dart';
 import '../model/notes.dart';
-import '../utils/colors.dart';
 import 'add_edit_note.dart';
 import '../provider/note_provider.dart';
 import 'package:provider/provider.dart';
@@ -18,6 +16,16 @@ class NotesMain extends StatefulWidget {
 class _NotesMainState extends State<NotesMain> {
   final TextEditingController _searchController = TextEditingController();
   @override
+
+  /// Called when the widget is inserted into the tree.
+  ///
+  /// This method is used to retrieve all notes from the database as soon as the
+  /// widget is inserted into the tree. This is done using
+  /// [WidgetsBinding.instance.addPostFrameCallback] to ensure that the widget
+  /// has been inserted into the tree and the provider is available.
+  ///
+  /// The [listen] parameter of [Provider.of] is set to `false` to avoid
+  /// rebuilding the widget when the provider changes.
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -25,16 +33,42 @@ class _NotesMainState extends State<NotesMain> {
     });
   }
 
-  Color getRandomColors() {
-    math.Random random = math.Random();
-    return backgroundColors[random.nextInt(backgroundColors.length)];
-  }
-
+  /// Pops the current context off the navigator that most tightly encloses the
+  /// given `context`.
+  ///
+  /// This is used to go back to the previous screen when the "Back" button is
+  /// pressed in the app bar.
+  ///
+  /// See also:
+  ///
+  /// * [Navigator.pop]
   void popContext() {
     Navigator.pop(context);
   }
 
   @override
+
+  /// Builds the main screen of the app.
+  ///
+  /// The main screen shows all notes in a list view. The notes are sorted by
+  /// their updated time in descending order.
+  ///
+  /// The screen also contains a search field where the user can search for notes
+  /// by their title or content.
+  ///
+  /// Each note is displayed in a card with the title and content. The title is
+  /// displayed in bold font and the content is displayed in a regular font.
+  ///
+  /// The user can tap on a note to edit it. The note is passed to the
+  /// [AddEditNote] screen where the user can edit the note.
+  ///
+  /// The user can also delete a note by tapping on the delete button in the
+  /// trailing of the card. The note is deleted from the database and the list
+  /// view is updated.
+  ///
+  /// The screen also contains a floating action button which can be used to
+  /// create a new note. The note is created in the database and the list view
+  /// is updated.
   Widget build(BuildContext context) {
     final noteProvider = Provider.of<NoteProvider>(context);
     return SafeArea(
@@ -109,7 +143,7 @@ class _NotesMainState extends State<NotesMain> {
                                             height: 1.5))
                                   ])),
                           subtitle: Text(
-                            "Edited: ${DateFormat("dd-MM-yyyy, hh:mm:ss").format(DateTime.parse(note.updatedOn))}",
+                            "Updated: ${formatDateTime(DateTime.parse(note.updatedOn))}",
                             style: const TextStyle(
                                 fontSize: 12,
                                 fontStyle: FontStyle.italic,
@@ -162,8 +196,15 @@ class _NotesMainState extends State<NotesMain> {
     );
   }
 
+  /// A TextField used to search notes. The onChanged callback is connected to
+  /// [NoteProvider.searchNote] so that the notes are filtered as the user types.
+  ///
+  /// The search field is styled to have a grey background and a circular border
+  /// with a search icon as a prefix. The field is filled by default and has a
+  /// transparent border when it is focused.
   TextField searchField(NoteProvider noteProvider) {
     return TextField(
+      textCapitalization: TextCapitalization.sentences,
       controller: _searchController,
       onChanged: (value) => noteProvider.searchNote(value),
       decoration: InputDecoration(
