@@ -24,6 +24,7 @@ class _AddEditNoteState extends State<AddEditNote> {
   final TextEditingController _contentController = TextEditingController();
 
   @override
+
   /// Called when the widget is inserted into the tree.
   ///
   /// This method is used to initialize the text editing controllers with the
@@ -67,6 +68,7 @@ class _AddEditNoteState extends State<AddEditNote> {
   }
 
   @override
+
   /// Builds the main widget of the Add/Edit Note screen.
   ///
   /// This widget is a [SafeArea] widget that contains a [Scaffold] widget with
@@ -168,7 +170,9 @@ class _AddEditNoteState extends State<AddEditNote> {
   Future<void> updateNote() async {
     try {
       Note updatedNote = widget.note!.copyWith(
-          title: _titleController.text, content: _contentController.text);
+          title: _titleController.text,
+          content: _contentController.text,
+          updatedOn: DateTime.now().toIso8601String());
       final bool isUpdated = await widget.noteProvider.updateNote(updatedNote);
       if (isUpdated) {
         widget.noteProvider.getAllNotes();
