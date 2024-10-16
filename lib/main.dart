@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'screens/notes_main.dart';
 import 'provider/note_provider.dart';
 import 'package:provider/provider.dart';
+import 'screens/splash_screen.dart';
 
 /// The application entry point.
 ///
@@ -15,12 +15,13 @@ class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
+
   /// Builds the root widget of the application.
   ///
   /// This widget is the top most widget and is the ancestor of all other widgets
   /// in the application. It is a [MaterialApp] which is the root of the
   /// material library and is used to configure the top-level routing of the app,
-  /// and is the parent of the [NotesMain] widget which is the main widget of the
+  /// and is the parent of the [SplashScreen] widget which is the main widget of the
   /// app.
   ///
   /// The [ChangeNotifierProvider] widget is used to provide the [NoteProvider]
@@ -35,7 +36,7 @@ class MyApp extends StatelessWidget {
         title: 'Notes App',
         theme: ThemeData.dark().copyWith(
             textTheme: ThemeData.dark().textTheme.apply(fontFamily: 'Poppins')),
-        home: const NotesMain(),
+        home: const SplashScreen(),
       ),
     );
   }
